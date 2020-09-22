@@ -1,0 +1,14 @@
+
+public class swap_two_numbers_without_using_a_third_variable {
+
+	public static void main(String[] args) {
+		int x =4,y = 5;
+		y = x+y;
+		x = y-x;
+		y = b-a;
+		System.out.println(x+ " "+y);
+		
+
+	}
+
+}

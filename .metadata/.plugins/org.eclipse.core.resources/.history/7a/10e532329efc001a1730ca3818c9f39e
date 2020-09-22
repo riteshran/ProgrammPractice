@@ -1,0 +1,16 @@
+
+public class How_to_reverse_a_String {
+
+	public static void main(String[] args) {
+		String s1 = "Ritesh";
+		int n = s1.length();
+		StringBuffer sb = new StringBuffer();
+		char[] c = s1.toCharArray();
+		for(int i=n;i>0;i--) {
+			sb.append(c[i]);
+		}
+		System.out.println(sb.toString());
+
+	}
+
+}

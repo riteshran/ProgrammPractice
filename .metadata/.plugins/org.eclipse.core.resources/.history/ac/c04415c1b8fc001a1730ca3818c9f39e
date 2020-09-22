@@ -1,0 +1,180 @@
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+class TempStudent {
+    public String name;
+    public int age;
+    public Address address;
+    public List<MobileNumber> mobileNumbers;
+ 
+    public TempStudent(String name, int age, Address address, List<MobileNumber> mobileNumbers) {
+        this.name = name;
+        this.age = age;
+        this.address = address;
+        this.mobileNumbers = mobileNumbers;
+    }
+}
+
+class Student {
+	private String name;
+	private int age;
+	private Address address;
+	private List<MobileNumber> mobileNumber;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+	public List<MobileNumber> getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(List<MobileNumber> mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+	public Student(String name, int age, Address address, List<MobileNumber> mobileNumber) {
+		super();
+		this.name = name;
+		this.age = age;
+		this.address = address;
+		this.mobileNumber = mobileNumber;
+	}
+
+	@Override
+	public String toString() {
+		return "Student [name=" + name + ", age=" + age + ", address=" + address + ", mobileNumber=" + mobileNumber
+				+ "]";
+	}
+	
+
+}
+
+class Address {
+	private String zipcode;
+
+	public Address(String zipcode) {
+		super();
+		this.zipcode = zipcode;
+	}
+
+	public String getZipcode() {
+		return zipcode;
+	}
+
+	public void setZipcode(String zipcode) {
+		this.zipcode = zipcode;
+	}
+
+}
+
+class MobileNumber{
+	private String number;
+
+	public MobileNumber(String number) {
+		super();
+		this.number = number;
+	}
+
+	public String getNumber() {
+		return number;
+	}
+
+	public void setNumber(String number) {
+		this.number = number;
+	}
+	
+}
+
+public class StreamTest {
+
+	public static void main(String[] args) {
+		
+		Student student1 = new Student("Jayesh",20,new Address("1234"),Arrays.asList(new MobileNumber("1233"), new MobileNumber("1234")));
+	    Student student2 = new Student("Khyati",20,new Address("1235"),Arrays.asList(new MobileNumber("1111"), new MobileNumber("3333"), new MobileNumber("1233")));
+	    Student student3 = new Student("Jason",20,new Address("1236"), Arrays.asList(new MobileNumber("3333"), new MobileNumber("4444")));
+	    List<Student> students = Arrays.asList(student1, student2, student3);
+	    
+	    /*****************************************************
+        Get student with exact match name "jayesh"
+       *****************************************************/
+	    Optional<Student> studs1 = students.stream().filter(s1->s1.getName().equalsIgnoreCase("jayesh")).findFirst();
+	    System.out.println(studs1.isPresent()?studs1.get().getName():"No Student Found");
+	    
+	    /*****************************************************
+        Get student with matching address "1235"
+       *****************************************************/
+	    Optional<Student> studs2 = students.stream().filter(s1->s1.getAddress().getZipcode().equalsIgnoreCase("1236")).findAny();
+	    System.out.println(studs2.isPresent()?studs2.get().getName():"No student for this address");
+	    
+	    /*****************************************************
+        Get all student having mobile numbers 3333.
+       *****************************************************/
+	    List<Student> studs3 = students.stream()
+	    		.filter(s1->s1.getMobileNumber().stream().anyMatch(x->Objects.equals(x.getNumber(), "3333")))
+	    		.collect(Collectors.toList());
+	    String result1 = studs3.stream().map(std -> std.getName()).collect(Collectors.joining(",", "[", "]"));
+        System.out.println(result1);
+        
+        /*****************************************************
+        Get all student having mobile number 1233 and 1234
+        *****************************************************/	
+        List<Student> studs4 = students.stream()
+        		.filter(s1->s1.getMobileNumber().stream().anyMatch(x->Objects.equals(x.getNumber(), "1234") || Objects.equals(x.getNumber(), "1234")))
+        		.collect(Collectors.toList());
+	
+        String result2 = studs4.stream().map(x->x.getName()).collect(Collectors.joining(",","[","]"));
+        System.out.println(result2);
+        
+        /*****************************************************
+        Create a List<Student> from the List<TempStudent>
+       *****************************************************/
+       TempStudent tmpStud1 = new TempStudent("Jayesh1",201,new Address("12341"),Arrays.asList(new MobileNumber("12331"), new MobileNumber("12341")));
+       TempStudent tmpStud2 = new TempStudent("Khyati1",202,new Address("12351"),Arrays.asList(new MobileNumber("11111"), new MobileNumber("33331"), new MobileNumber("12331")));
+
+       List<TempStudent> tmpStudents = Arrays.asList(tmpStud1, tmpStud2);
+
+       List<Student> studentList = tmpStudents.stream()
+           .map(tmpStud -> new Student(tmpStud.name, tmpStud.age, tmpStud.address, tmpStud.mobileNumbers))
+           .collect(Collectors.toList());
+
+       System.out.println(studentList);
+	
+       /*****************************************************
+       Convert List<Student> to List<String> of student name
+      *****************************************************/
+       List<String> al = students.stream().map(x->x.getName()).collect(Collectors.toList());
+       System.out.println(al);
+       
+       /*****************************************************
+       Convert List<students> to String
+      *****************************************************/
+       String name = students.stream().map(x->x.getName()).collect(Collectors.joining(",","[","]"));
+       System.out.println(name);
+       
+	
+	}
+
+}
